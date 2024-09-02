@@ -25,20 +25,22 @@ export default function App() {
     }
   ])
 
-  const gantt = useRef<Gantt>(null)
+  const gantt = useRef<{ gantt: Gantt; svg: SVGSVGElement }>(null)
   useEffect(() => {
-    gantt.current?.refresh(tasks)
+    gantt.current?.gantt?.refresh(tasks)
   }, [tasks])
 
   const changeViewMode = (viewMode: viewMode) => {
-    gantt.current?.change_view_mode(viewMode)
+    gantt.current?.gantt?.change_view_mode(viewMode)
   }
+  const getViewSvg = () => gantt.current?.svg
   return (
     <TooltipProvider>
       <ActionBar
         changeViewMode={changeViewMode}
         tasks={tasks}
         setTasks={setTasks}
+        getViewSvg={getViewSvg}
       />
 
       <PanelGroup

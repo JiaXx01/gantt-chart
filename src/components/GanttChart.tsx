@@ -11,13 +11,16 @@ import dayjs from 'dayjs'
 import { ITask } from '@/App'
 
 const GanttChart = forwardRef<
-  Gantt | undefined,
+  { gantt: Gantt | undefined; svg: SVGSVGElement | null },
   {
     tasks: ITask[]
     setTasks: Dispatch<SetStateAction<ITask[]>>
   }
 >(({ tasks, setTasks }, ref) => {
-  useImperativeHandle(ref, () => gantt.current)
+  useImperativeHandle(ref, () => ({
+    gantt: gantt.current,
+    svg: svgRef.current
+  }))
   const gantt = useRef<Gantt>()
   useEffect(() => {
     gantt.current = new Gantt('#gantt', tasks, {
@@ -51,10 +54,10 @@ const GanttChart = forwardRef<
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  const svgRef = useRef<SVGSVGElement>(null)
   return (
     <div className="h-full">
-      <svg id="gantt"></svg>
+      <svg ref={svgRef} id="gantt"></svg>
     </div>
   )
 })
