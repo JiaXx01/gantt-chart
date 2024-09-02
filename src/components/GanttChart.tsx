@@ -21,9 +21,6 @@ const GanttChart = forwardRef<
   const gantt = useRef<Gantt>()
   useEffect(() => {
     gantt.current = new Gantt('#gantt', tasks, {
-      on_click: function (task) {
-        console.log(task)
-      },
       on_date_change: function ({ id }, start, end) {
         setTasks(old =>
           old.map(task => {
@@ -50,9 +47,6 @@ const GanttChart = forwardRef<
             return task
           })
         )
-      },
-      on_view_change: function (mode) {
-        console.log(mode)
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps

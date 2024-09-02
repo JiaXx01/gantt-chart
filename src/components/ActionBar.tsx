@@ -14,16 +14,23 @@ export default function ActionBar({
   setTasks: Dispatch<SetStateAction<ITask[]>>
   changeViewMode: (viewMode: viewMode) => void
 }) {
-  // const saveTask = () => {
-  //   const json = JSON.stringify(tasks, null, 2)
-  //   const blob = new Blob([json], { type: 'application/json' })
-  //   saveAs(blob, )
-  // }
+  const saveTasks = () => {
+    const json = JSON.parse(JSON.stringify(tasks))
+    for (const task of json) {
+      delete task._start
+      delete task._end
+      delete task._index
+    }
+    const blob = new Blob([JSON.stringify(json, null, 2)], {
+      type: 'application/json'
+    })
+    saveAs(blob, 'gantt-chart.json')
+  }
 
   return (
     <div className="fixed top-0 z-30 left-0 right-0 h-12 flex items-center gap-3 px-3 bg-background shadow">
       <h1 className="text-muted-foreground font-bold text-3xl">Gantt</h1>
-      <Button size="sm">
+      <Button size="sm" onClick={saveTasks}>
         <SaveIcon />
         Save
       </Button>

@@ -7,6 +7,7 @@ import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
 import Gantt, { Task, viewMode } from 'frappe-gantt'
 import dayjs from 'dayjs'
 import { TooltipProvider } from './components/ui/tooltip'
+import { nanoid } from 'nanoid'
 
 export interface ITask extends Task {
   remark?: string
@@ -15,28 +16,12 @@ export interface ITask extends Task {
 export default function App() {
   const [tasks, setTasks] = useState<ITask[]>([
     {
-      id: '1',
-      name: '',
+      id: nanoid(),
+      name: 'Unnamed',
       start: dayjs().format('YYYY-MM-DD'),
       end: dayjs().add(1, 'day').format('YYYY-MM-DD'),
-      progress: 10,
+      progress: 0,
       dependencies: []
-    },
-    {
-      id: '3',
-      name: '',
-      start: dayjs().format('YYYY-MM-DD'),
-      end: dayjs().add(2, 'day').format('YYYY-MM-DD'),
-      progress: 10,
-      dependencies: ['1']
-    },
-    {
-      id: '2',
-      name: '',
-      start: dayjs().format('YYYY-MM-DD'),
-      end: dayjs().add(2, 'day').format('YYYY-MM-DD'),
-      progress: 10,
-      dependencies: ['1', '3']
     }
   ])
 
@@ -48,7 +33,6 @@ export default function App() {
   const changeViewMode = (viewMode: viewMode) => {
     gantt.current?.change_view_mode(viewMode)
   }
-
   return (
     <TooltipProvider>
       <ActionBar

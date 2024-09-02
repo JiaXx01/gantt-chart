@@ -72,7 +72,6 @@ const InputCell: ColumnDef<ITask>['cell'] = ({
   const [value, setValue] = useState(initialValue)
   const onBlur = () => {
     if (value === initialValue) return
-    console.log({ [id]: value })
     table.options.meta?.updateData(index, { [id]: value })
   }
   useEffect(() => {
