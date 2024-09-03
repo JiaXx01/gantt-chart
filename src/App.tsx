@@ -4,12 +4,18 @@ import GanttChart from './components/GanttChart'
 import TaskEditor from './components/TaskEditor'
 
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels'
-import Gantt, { Task, viewMode } from 'frappe-gantt'
+import Gantt, { viewMode } from 'frappe-gantt'
 import dayjs from 'dayjs'
 import { TooltipProvider } from './components/ui/tooltip'
 import { nanoid } from 'nanoid'
 
-export interface ITask extends Task {
+export interface ITask {
+  id: string
+  name: string
+  start: string
+  end: string
+  progress: number
+  dependencies: string[]
   remark?: string
 }
 
