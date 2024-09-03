@@ -14,13 +14,13 @@ import { FileJson, ImageDownIcon, SaveIcon } from 'lucide-react'
 export default function ActionBar({
   changeViewMode,
   tasks,
-  getViewSvg,
-  setTasks
+  setTasks,
+  getSvg
 }: {
   tasks: ITask[]
   setTasks: Dispatch<SetStateAction<ITask[]>>
   changeViewMode: (viewMode: viewMode) => void
-  getViewSvg: () => SVGSVGElement | undefined
+  getSvg?: () => string | undefined
 }) {
   const saveTasks = () => {
     const json = JSON.parse(JSON.stringify(tasks))
@@ -35,8 +35,10 @@ export default function ActionBar({
     saveAs(blob, 'gantt-chart.json')
   }
   const saveSvg = () => {
-    const svg = getViewSvg()
+    const svg = getSvg?.()
     if (!svg) return
+    const blob = new Blob([svg], { type: 'image/svg+xml' })
+    saveAs(blob, 'gantt-char.svg')
   }
 
   const uploadRef = useRef<HTMLInputElement>(null)
@@ -46,6 +48,10 @@ export default function ActionBar({
       const json = e.target?.result as string
       if (!json) return
       setTasks(JSON.parse(json))
+
+      if (uploadRef.current?.value) {
+        uploadRef.current.value = ''
+      }
     }
     reader.readAsText(file)
   }
@@ -62,11 +68,11 @@ export default function ActionBar({
           <DropdownMenuContent align="start">
             <DropdownMenuItem onClick={saveTasks}>
               <SaveIcon size="16" className="mr-2" />
-              Save data
+              Save
             </DropdownMenuItem>
             <DropdownMenuItem onClick={saveSvg}>
               <ImageDownIcon size="16" className="mr-2" />
-              Save SVG
+              Save image
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => uploadRef.current?.click()}>
               <FileJson size="16" className="mr-2" />
@@ -79,7 +85,7 @@ export default function ActionBar({
           size="sm"
           className="ml-auto"
           defaultValue="Day"
-          onValueChange={changeViewMode}
+          onValueChange={mode => mode && changeViewMode(mode as viewMode)}
         >
           <ToggleGroupItem value="Quarter Day">Quarter Day</ToggleGroupItem>
           <ToggleGroupItem value="Half Day">Half Day</ToggleGroupItem>
@@ -95,8 +101,9 @@ export default function ActionBar({
         type="file"
         onChange={e => {
           const target = e.target
-          if (!target.files) return
+          if (!target.files?.[0]) return
           const file = target.files[0]
+          if (!file) return
           importJson(file)
         }}
       />
